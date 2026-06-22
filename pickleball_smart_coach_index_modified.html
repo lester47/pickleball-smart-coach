@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>揮拍健康力｜匹克球智慧教練</title>
+  <style>
+    :root {
+      --blue: #2563eb; --blue-dark: #1e40af; --green: #16a34a;
+      --orange: #f97316; --red: #dc2626; --gray-50: #f8fafc;
+      --gray-100: #f1f5f9; --gray-200: #e2e8f0; --gray-500: #64748b;
+      --gray-700: #334155; --gray-900: #0f172a; --shadow: 0 12px 30px rgba(15,23,42,.12);
+      --radius: 22px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif;
+      background: linear-gradient(135deg,#eff6ff 0%,#f8fafc 42%,#ecfdf5 100%);
+      color: var(--gray-900); min-height: 100vh;
+    }
+    header { padding: 24px 32px 16px; display: flex; justify-content: space-between; gap: 20px; align-items: center; }
+    .brand { display:flex; gap:14px; align-items:center; }
+    .logo { width:58px; height:58px; border-radius:18px; background:linear-gradient(135deg,var(--blue),var(--green)); color:white; display:grid; place-items:center; font-size:28px; font-weight:900; box-shadow:var(--shadow); }
+    h1 { margin:0; color:var(--blue-dark); font-size: clamp(26px,3vw,42px); line-height:1.15; }
+    .subtitle { margin-top:6px; color:var(--gray-500); font-size:15px; }
+    .status-pill { background:white; border:1px solid var(--gray-200); padding:12px 16px; border-radius:999px; display:flex; gap:8px; align-items:center; font-weight:800; white-space:nowrap; box-shadow:0 8px 20px rgba(15,23,42,.08); }
+    .dot { width:12px; height:12px; border-radius:50%; background:var(--red); }
+    .dot.connected { background:var(--green); }
+    main { display:grid; grid-template-columns:1.2fr .8fr; gap:22px; padding:12px 32px 32px; }
+    .card { background:rgba(255,255,255,.94); border:1px solid rgba(226,232,240,.95); border-radius:var(--radius); box-shadow:var(--shadow); padding:22px; }
+    .section-title { margin:0 0 16px; font-size:21px; display:flex; gap:10px; align-items:center; }
+    .section-title span { width:32px; height:32px; border-radius:11px; background:#dbeafe; color:var(--blue-dark); display:inline-grid; place-items:center; font-weight:900; }
+    .mode-grid { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px; }
+    .mode-btn { border:2px solid var(--gray-200); background:white; border-radius:18px; padding:16px 10px; cursor:pointer; transition:.18s; min-height:120px; display:flex; flex-direction:column; justify-content:center; gap:8px; text-align:center; }
+    .mode-btn:hover { transform:translateY(-2px); border-color:var(--blue); }
+    .mode-btn.active { border-color:var(--blue); background:#eff6ff; box-shadow:0 10px 20px rgba(37,99,235,.16); }
+    .mode-icon { font-size:32px; } .mode-name { font-weight:900; font-size:16px; } .mode-desc { color:var(--gray-500); font-size:12px; line-height:1.35; }
+    .training-visual-card { margin-top:20px; background:linear-gradient(180deg,#fff 0%,#f8fbff 100%); border:1px solid #bfdbfe; border-radius:22px; padding:18px; }
+    .visual-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; }
+    .visual-title { display:flex; align-items:center; gap:10px; margin:0; font-size:20px; color:var(--blue-dark); font-weight:1000; }
+    .visual-title span { width:32px; height:32px; border-radius:11px; background:#dbeafe; color:var(--blue-dark); display:inline-grid; place-items:center; font-weight:1000; }
+    .visual-current { font-weight:900; color:var(--gray-500); background:#fff; border:1px solid var(--gray-200); border-radius:999px; padding:8px 12px; white-space:nowrap; }
+    .visual-tabs { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; margin-bottom:14px; }
+    .visual-tabs button { border:1px solid var(--gray-200); background:white; border-radius:14px; padding:11px 10px; font-weight:900; cursor:pointer; color:var(--gray-700); transition:.15s; }
+    .visual-tabs button:hover { border-color:var(--blue); color:var(--blue-dark); transform:translateY(-1px); }
+    .visual-tabs button.active { background:var(--blue); color:white; border-color:var(--blue); box-shadow:0 8px 18px rgba(37,99,235,.18); }
+    .visual-tabs button.error-active { background:var(--red); color:white; border-color:var(--red); box-shadow:0 8px 18px rgba(220,38,38,.18); }
+    .guide-image-box { background:white; border:1px solid var(--gray-200); border-radius:20px; padding:12px; box-shadow:0 8px 20px rgba(15,23,42,.08); min-height:260px; display:grid; place-items:center; overflow:hidden; }
+    .guide-image-box img { width:100%; max-height:620px; object-fit:contain; border-radius:16px; display:block; }
+    .guide-placeholder { width:100%; min-height:260px; border:2px dashed var(--gray-200); border-radius:18px; display:grid; place-items:center; text-align:center; padding:24px; color:var(--gray-500); font-weight:900; line-height:1.6; background:#f8fafc; }
+    .coach-panel { margin-top:20px; display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+    .current-mode { background:linear-gradient(135deg,#dbeafe,#ecfdf5); border-radius:20px; padding:22px; min-height:228px; display:flex; flex-direction:column; justify-content:space-between; border:1px solid #bfdbfe; }
+    .feedback-box { border-radius:20px; background:var(--gray-50); padding:22px; border:1px solid var(--gray-200); min-height:228px; display:flex; flex-direction:column; justify-content:space-between; }
+    .mode-label { font-size:15px; color:var(--gray-500); margin-bottom:6px; }
+    .big-mode { font-size:clamp(30px,4vw,52px); font-weight:1000; color:var(--blue-dark); line-height:1.05; }
+    .coach-tip { margin-top:12px; color:var(--gray-700); font-size:17px; line-height:1.55; font-weight:800; }
+    .feedback-state { font-size:clamp(28px,4vw,46px); font-weight:1000; line-height:1.1; }
+    .feedback-state.ok { color:var(--green); } .feedback-state.error { color:var(--red); } .feedback-state.ready { color:var(--orange); }
+    .feedback-message { margin-top:12px; font-size:20px; font-weight:900; color:var(--gray-700); line-height:1.4; }
+    .control-row { margin-top:18px; display:flex; flex-wrap:wrap; gap:12px; }
+    button.primary, button.secondary, button.danger { border:none; padding:14px 18px; border-radius:16px; cursor:pointer; font-weight:900; font-size:16px; transition:.15s; }
+    button.primary { background:var(--blue); color:white; } button.secondary { background:white; color:var(--gray-700); border:1px solid var(--gray-200); } button.danger { background:#fee2e2; color:var(--red); }
+    button:hover { transform:translateY(-1px); }
+    .stats-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+    .stat { background:var(--gray-50); border:1px solid var(--gray-200); border-radius:18px; padding:18px; }
+    .stat-label { color:var(--gray-500); font-size:14px; margin-bottom:6px; font-weight:800; }
+    .stat-value { font-size:38px; font-weight:1000; } .green{color:var(--green)} .red{color:var(--red)} .blue{color:var(--blue)}
+    .progress-wrap { margin-top:18px; background:var(--gray-100); border-radius:999px; overflow:hidden; height:22px; border:1px solid var(--gray-200); }
+    .progress { height:100%; width:0%; background:linear-gradient(90deg,var(--green),var(--blue)); transition:width .3s; }
+    .error-list { margin-top:18px; display:grid; gap:10px; }
+    .error-row { display:grid; grid-template-columns:120px 1fr 48px; align-items:center; gap:10px; font-weight:900; color:var(--gray-700); }
+    .bar { height:12px; background:var(--gray-100); border-radius:999px; overflow:hidden; }
+    .bar-inner { height:100%; width:0%; background:var(--orange); border-radius:999px; transition:width .3s; }
+    .serial-log { margin-top:18px; background:#0f172a; color:#d1fae5; border-radius:18px; padding:14px; height:160px; overflow-y:auto; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:13px; line-height:1.5; }
+    .simulate-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin-top:14px; }
+    .sim-btn { border:1px solid var(--gray-200); border-radius:14px; background:white; padding:12px; cursor:pointer; font-weight:900; color:var(--gray-700); }
+    .sim-btn.ok { background:#dcfce7; color:#166534; } .sim-btn.err { background:#fff7ed; color:#9a3412; }
+    .hint { color:var(--gray-500); font-size:13px; line-height:1.6; margin-top:12px; }
+    @media(max-width:1100px){ main{grid-template-columns:1fr}.mode-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.coach-panel{grid-template-columns:1fr}.visual-tabs{grid-template-columns:repeat(2,minmax(0,1fr))} }
+    @media(max-width:640px){ header{flex-direction:column;align-items:flex-start;padding:20px} main{padding:8px 20px 24px}.mode-grid,.stats-grid,.simulate-grid,.visual-tabs{grid-template-columns:1fr}.visual-head{flex-direction:column;align-items:flex-start} }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand"><div class="logo">揮</div><div><h1>揮拍健康力｜匹克球智慧教練</h1><div class="subtitle">初學者揮拍動作監控網頁｜micro:bit radio → 教練端 → 網頁語音回饋</div></div></div>
+    <div class="status-pill"><span id="connectDot" class="dot"></span><span id="connectText">尚未連線</span></div>
+  </header>
+  <main>
+    <section class="card">
+      <h2 class="section-title"><span>1</span>練習模式選擇</h2><div class="mode-grid" id="modeGrid"></div>
+      <div class="training-visual-card">
+        <div class="visual-head"><h2 class="visual-title"><span>圖</span>動作圖解與錯誤分析</h2><div class="visual-current" id="visualCurrent">正拍抽球｜正確動作</div></div>
+        <div class="visual-tabs"><button id="tab-correct" onclick="showGuideImage('correct')">正確動作</button><button id="tab-small" onclick="showGuideImage('small')">動作太小</button><button id="tab-dir" onclick="showGuideImage('dir')">方向錯誤</button><button id="tab-shake" onclick="showGuideImage('shake')">手腕亂甩</button><button id="tab-follow" onclick="showGuideImage('follow')">收拍不完整</button></div>
+        <div class="guide-image-box" id="guideImageBox"><img id="guideImage" src="images/fh_correct.png" alt="正拍抽球正確動作圖解"></div>
+        <div class="hint">正手與反拍圖卡會依照目前模式與事件碼自動切換；其他模式目前先保留為「圖解製作中」。</div>
+      </div>
+      <div class="coach-panel">
+        <div class="current-mode"><div><div class="mode-label">目前練習模式</div><div class="big-mode" id="currentModeName">正拍抽球</div><div class="coach-tip" id="coachTip">由後往前揮拍，手腕保持穩定。</div></div><div class="control-row"><button class="primary" onclick="startPractice()">開始練習</button><button class="secondary" onclick="sendModeToMicrobit()">送出模式</button><button class="danger" onclick="resetStats()">重置統計</button></div></div>
+        <div class="feedback-box"><div><div class="mode-label">即時教練回饋</div><div id="feedbackState" class="feedback-state ready">準備中</div><div id="feedbackMessage" class="feedback-message">請選擇模式後開始練習。</div></div><div class="hint">收到事件碼後，平板／電腦會播放對應語音，並更新成功率、錯誤分析與圖卡。</div></div>
+      </div>
+    </section>
+    <aside class="card"><h2 class="section-title"><span>2</span>即時統計</h2><div class="stats-grid"><div class="stat"><div class="stat-label">總揮拍次數</div><div class="stat-value" id="totalCount">0</div></div><div class="stat"><div class="stat-label">成功次數</div><div class="stat-value green" id="successCount">0</div></div><div class="stat"><div class="stat-label">錯誤次數</div><div class="stat-value red" id="errorCount">0</div></div><div class="stat"><div class="stat-label">成功率</div><div class="stat-value blue" id="successRate">0%</div></div></div><div class="progress-wrap"><div class="progress" id="successProgress"></div></div><div class="error-list"><div class="error-row"><span>動作太小</span><div class="bar"><div class="bar-inner" id="barSmall"></div></div><span id="smallCount">0</span></div><div class="error-row"><span>方向錯誤</span><div class="bar"><div class="bar-inner" id="barDir"></div></div><span id="dirCount">0</span></div><div class="error-row"><span>手腕亂甩</span><div class="bar"><div class="bar-inner" id="barShake"></div></div><span id="shakeCount">0</span></div><div class="error-row"><span>收拍不完整</span><div class="bar"><div class="bar-inner" id="barFollow"></div></div><span id="followCount">0</span></div></div></aside>
+    <section class="card"><h2 class="section-title"><span>3</span>micro:bit 連線與事件紀錄</h2><div class="control-row"><button class="primary" onclick="connectSerial()">連接 micro:bit 教練端</button><button class="secondary" onclick="disconnectSerial()">中斷連線</button><button class="secondary" onclick="toggleVoice()">語音：<span id="voiceStatus">開啟</span></button></div><div class="hint">本頁支援 Web Serial。建議用電腦版 Chrome / Edge 測試；未接 micro:bit 時，可用右側模擬事件按鈕。</div><div class="serial-log" id="serialLog"></div></section>
+    <aside class="card"><h2 class="section-title"><span>4</span>模擬事件測試</h2><div class="hint">先用這些按鈕測試語音、統計與圖卡切換。</div><div class="simulate-grid"><button class="sim-btn ok" onclick="handleEvent(currentMode.ok)">成功</button><button class="sim-btn err" onclick="handleEvent(currentMode.small)">動作太小</button><button class="sim-btn err" onclick="handleEvent(currentMode.dir)">方向錯誤</button><button class="sim-btn err" onclick="handleEvent(currentMode.shake)">手腕亂甩</button><button class="sim-btn err" onclick="handleEvent(currentMode.follow)">收拍不完整</button><button class="sim-btn" onclick="handleEvent('START')">開始事件</button></div></aside>
+  </main>
+<script>
+const modes={MODE_SERVE:{name:"下手發球",icon:"🏓",desc:"由下往前，穩定送球",tip:"由下往前送球，動作穩定，先求合法發球。",ok:"SV_OK",small:"SV_SMALL",dir:"SV_DIR",shake:"SV_SHAKE",follow:"SV_FOLLOW"},MODE_FH:{name:"正拍抽球",icon:"➡️",desc:"由後往前揮拍",tip:"由後往前揮拍，手腕保持穩定。",ok:"FH_OK",small:"FH_SMALL",dir:"FH_DIR",shake:"FH_SHAKE",follow:"FH_FOLLOW"},MODE_BH:{name:"反拍抽球",icon:"⬅️",desc:"反手方向擊球",tip:"反手方向要明確，身體轉向後再向前揮出。",ok:"BH_OK",small:"BH_SMALL",dir:"BH_DIR",shake:"BH_SHAKE",follow:"BH_FOLLOW"},MODE_FV:{name:"正手截擊",icon:"⚡",desc:"網前短促推出",tip:"截擊動作短一點，拍面穩住，向前推出。",ok:"FV_OK",small:"FV_SMALL",dir:"FV_DIR",shake:"FV_SHAKE",follow:"FV_FOLLOW"},MODE_BV:{name:"反手截擊",icon:"🛡️",desc:"反手網前反應",tip:"反手截擊穩住拍面，不要大幅甩拍。",ok:"BV_OK",small:"BV_SMALL",dir:"BV_DIR",shake:"BV_SHAKE",follow:"BV_FOLLOW"}};
+const guideImages={MODE_FH:{correct:"images/fh_correct.png",small:"images/fh_error_1_small.png",dir:"images/fh_error_2_direction.png",shake:"images/fh_error_3_wrist.png",follow:"images/fh_error_4_follow.png"},MODE_BH:{correct:"images/bh_correct.png",small:"images/bh_error_1_small.png",dir:"images/bh_error_2_direction.png",shake:"images/bh_error_3_wrist.png",follow:"images/bh_error_4_follow.png"}};
+const guideLabels={correct:"正確動作",small:"動作太小",dir:"方向錯誤",shake:"手腕亂甩",follow:"收拍不完整"};
+let currentModeCode="MODE_FH",currentMode=modes[currentModeCode],currentGuideType="correct";let stats={total:0,success:0,error:0,small:0,dir:0,shake:0,follow:0};let voiceEnabled=true,port=null,reader=null,writer=null,keepReading=false;
+const voiceTexts={START:"準備開始，請站到練習區。",END:"挑戰完成，看看你的練習成果。",RESET:"統計已重置。",MODE_SERVE:"下手發球模式。",MODE_FH:"正手抽球模式。",MODE_BH:"反拍抽球模式。",MODE_FV:"正手截擊模式。",MODE_BV:"反手截擊模式。",SV_OK:"很好，發球成功！",SV_SMALL:"動作太小，請完整送球。",SV_DIR:"方向不對，請由下往前送球。",SV_SHAKE:"手腕穩住，不要亂甩。",SV_FOLLOW:"發球後請自然往前送出去。",FH_OK:"很好，正拍成功！",FH_SMALL:"動作太小，請完整揮拍。",FH_DIR:"方向不對，由後往前揮。",FH_SHAKE:"手腕穩住，不要亂甩。",FH_FOLLOW:"收拍要完整，往前送出去。",BH_OK:"很好，反拍成功！",BH_SMALL:"動作太小，反拍請完整揮出。",BH_DIR:"方向不對，反手方向再明確一點。",BH_SHAKE:"手腕穩住，不要亂甩。",BH_FOLLOW:"反拍收拍要完整。",FV_OK:"很好，正手截擊成功！",FV_SMALL:"動作太小，請向前推出。",FV_DIR:"方向不對，截擊要向前。",FV_SHAKE:"拍面穩住，不要甩手腕。",FV_FOLLOW:"截擊動作短一點，不要停太快。",BV_OK:"很好，反手截擊成功！",BV_SMALL:"動作太小，反手截擊請向前推出。",BV_DIR:"方向不對，反手截擊要穩定向前。",BV_SHAKE:"手腕穩住，不要亂甩。",BV_FOLLOW:"截擊後拍面保持穩定。"};
+function initModes(){const grid=document.getElementById("modeGrid");grid.innerHTML="";Object.entries(modes).forEach(([code,mode])=>{const btn=document.createElement("button");btn.className="mode-btn"+(code===currentModeCode?" active":"");btn.onclick=()=>selectMode(code);btn.innerHTML=`<div class="mode-icon">${mode.icon}</div><div class="mode-name">${mode.name}</div><div class="mode-desc">${mode.desc}</div>`;grid.appendChild(btn);});}
+function selectMode(code){currentModeCode=code;currentMode=modes[code];document.getElementById("currentModeName").textContent=currentMode.name;document.getElementById("coachTip").textContent=currentMode.tip;setFeedback("準備中",`${currentMode.name}：${currentMode.tip}`,"ready");initModes();showGuideImage("correct");speak(voiceTexts[code]||currentMode.name);log(`模式切換：${code}｜${currentMode.name}`);sendTextToSerial(code);}
+function showGuideImage(type="correct"){currentGuideType=type;const box=document.getElementById("guideImageBox");const visualCurrent=document.getElementById("visualCurrent");const imageSet=guideImages[currentModeCode];updateGuideTabs(type);if(!imageSet){visualCurrent.textContent=`${currentMode.name}｜圖解製作中`;box.innerHTML=`<div class="guide-placeholder">「${currentMode.name}」圖解製作中<br>目前可先使用正拍抽球與反拍抽球圖卡。</div>`;return;}const src=imageSet[type]||imageSet.correct;const label=guideLabels[type]||"正確動作";visualCurrent.textContent=`${currentMode.name}｜${label}`;box.innerHTML=`<img id="guideImage" src="${src}" alt="${currentMode.name}${label}圖解" onerror="showImageMissing('${src}')">`;}
+function showImageMissing(src){document.getElementById("guideImageBox").innerHTML=`<div class="guide-placeholder">找不到圖片：<br>${src}<br><br>請確認圖片是否放在 images 資料夾內。</div>`;}
+function updateGuideTabs(type){["correct","small","dir","shake","follow"].forEach(key=>{const btn=document.getElementById(`tab-${key}`);if(!btn)return;btn.classList.remove("active","error-active");if(key===type)btn.classList.add(key==="correct"?"active":"error-active");});}
+function startPractice(){resetStats(false);showGuideImage("correct");setFeedback("開始練習",`${currentMode.name}開始，請完成標準動作。`,"ready");speak(`三，二，一，開始。${currentMode.name}`);log("START");sendTextToSerial("START");}
+function resetStats(announce=true){stats={total:0,success:0,error:0,small:0,dir:0,shake:0,follow:0};updateStats();showGuideImage("correct");setFeedback("準備中","統計已重置，請開始下一輪練習。","ready");if(announce){speak("統計已重置。");log("RESET");sendTextToSerial("RESET");}}
+function classifyEvent(code){if(code.endsWith("_OK"))return"ok";if(code.endsWith("_SMALL"))return"small";if(code.endsWith("_DIR"))return"dir";if(code.endsWith("_SHAKE"))return"shake";if(code.endsWith("_FOLLOW"))return"follow";return"other";}
+function handleEvent(raw){const code=String(raw).trim();if(!code)return;log(`收到事件：${code}`);if(modes[code]){selectMode(code);return;}if(code==="START"){showGuideImage("correct");setFeedback("開始練習","請完成標準動作。","ready");speak(voiceTexts.START);return;}if(code==="RESET"){resetStats();return;}const type=classifyEvent(code);const text=voiceTexts[code]||"收到動作事件。";if(type==="ok"){stats.total++;stats.success++;setFeedback("動作成功",text,"ok");showGuideImage("correct");}else if(type==="small"){stats.total++;stats.error++;stats.small++;setFeedback("動作太小",text,"error");showGuideImage("small");}else if(type==="dir"){stats.total++;stats.error++;stats.dir++;setFeedback("方向錯誤",text,"error");showGuideImage("dir");}else if(type==="shake"){stats.total++;stats.error++;stats.shake++;setFeedback("手腕亂甩",text,"error");showGuideImage("shake");}else if(type==="follow"){stats.total++;stats.error++;stats.follow++;setFeedback("收拍不完整",text,"error");showGuideImage("follow");}else{setFeedback("收到資料",code,"ready");}speak(text);updateStats();}
+function setFeedback(state,msg,style){const s=document.getElementById("feedbackState"),m=document.getElementById("feedbackMessage");s.textContent=state;m.textContent=msg;s.classList.remove("ok","error","ready");s.classList.add(style);}
+function updateStats(){const rate=stats.total===0?0:Math.round(stats.success/stats.total*100);document.getElementById("totalCount").textContent=stats.total;document.getElementById("successCount").textContent=stats.success;document.getElementById("errorCount").textContent=stats.error;document.getElementById("successRate").textContent=rate+"%";document.getElementById("successProgress").style.width=rate+"%";document.getElementById("smallCount").textContent=stats.small;document.getElementById("dirCount").textContent=stats.dir;document.getElementById("shakeCount").textContent=stats.shake;document.getElementById("followCount").textContent=stats.follow;const maxErr=Math.max(stats.small,stats.dir,stats.shake,stats.follow,1);document.getElementById("barSmall").style.width=(stats.small/maxErr*100)+"%";document.getElementById("barDir").style.width=(stats.dir/maxErr*100)+"%";document.getElementById("barShake").style.width=(stats.shake/maxErr*100)+"%";document.getElementById("barFollow").style.width=(stats.follow/maxErr*100)+"%";}
+function speak(text){if(!voiceEnabled||!("speechSynthesis" in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang="zh-TW";u.rate=1.02;u.pitch=1.05;u.volume=1;speechSynthesis.speak(u);}
+function toggleVoice(){voiceEnabled=!voiceEnabled;document.getElementById("voiceStatus").textContent=voiceEnabled?"開啟":"關閉";if(!voiceEnabled&&"speechSynthesis" in window)speechSynthesis.cancel();}
+function log(text){const el=document.getElementById("serialLog");const t=new Date().toLocaleTimeString("zh-TW",{hour12:false});el.innerHTML+=`[${t}] ${text}<br>`;el.scrollTop=el.scrollHeight;}
+function setConnectionStatus(ok){document.getElementById("connectDot").classList.toggle("connected",ok);document.getElementById("connectText").textContent=ok?"已連線":"尚未連線";}
+async function connectSerial(){if(!("serial" in navigator)){alert("此瀏覽器不支援 Web Serial。建議使用電腦版 Chrome 或 Edge 開啟。");return;}try{port=await navigator.serial.requestPort();await port.open({baudRate:115200});const decoder=new TextDecoderStream();port.readable.pipeTo(decoder.writable);reader=decoder.readable.getReader();const encoder=new TextEncoderStream();encoder.readable.pipeTo(port.writable);writer=encoder.writable.getWriter();keepReading=true;setConnectionStatus(true);log("Web Serial 已連線。");readLoop();}catch(e){log("連線失敗："+e.message);alert("連線失敗，請確認 micro:bit 已用 USB 接上，並使用 Chrome / Edge。");}}
+async function readLoop(){let buffer="";while(keepReading&&reader){try{const {value,done}=await reader.read();if(done)break;if(value){buffer+=value;const lines=buffer.split(/\r?\n/);buffer=lines.pop();lines.forEach(line=>{const clean=line.trim();if(clean)handleEvent(clean);});}}catch(e){log("讀取中斷："+e.message);break;}}}
+async function disconnectSerial(){keepReading=false;try{if(reader){await reader.cancel();reader.releaseLock();reader=null;}if(writer){writer.releaseLock();writer=null;}if(port){await port.close();port=null;}}catch(e){}setConnectionStatus(false);log("Web Serial 已中斷。");}
+async function sendTextToSerial(text){if(!writer)return;try{await writer.write(text+"\n");log("送出指令："+text);}catch(e){log("送出失敗："+e.message);}}
+function sendModeToMicrobit(){sendTextToSerial(currentModeCode);speak("已送出"+currentMode.name+"模式。");}
+initModes();updateStats();showGuideImage("correct");log("網頁已啟動，可先使用模擬事件測試。");
+</script>
+</body>
+</html>
